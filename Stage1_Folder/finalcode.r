@@ -1,21 +1,62 @@
-# Assignment 1
-# Load the necessary packages
-install.packages("BiocManager")
-library(BiocManager)
-BiocManager::install("Biostrings")
+#########################################
+# 1. Set Up a Personal Library
+#########################################
+# Determine a user-specific library path.
+user_lib <- Sys.getenv("R_LIBS_USER")
+if (!nzchar(user_lib)) {
+  user_lib <- file.path(Sys.getenv("HOME"), "R", "win-library", paste0(R.version$major, ".", R.version$minor))
+}
+if (!dir.exists(user_lib)) {
+  dir.create(user_lib, recursive = TRUE)
+}
+# Prepend the user library to .libPaths so installations go there.
+.libPaths(c(user_lib, .libPaths()))
+message("Using library paths: ", paste(.libPaths(), collapse = ", "))
+
+#########################################
+# 2. Install and Load Required Packages
+#########################################
+# Install BiocManager if necessary.
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+  install.packages("BiocManager", lib = user_lib)
+}
+
+# List of required Bioconductor packages.
+required_pkgs <- c("GenomeInfoDbData", "GenomeInfoDb", "IRanges", "XVector", "Biostrings")
+
+# Install any missing packages.
+for(pkg in required_pkgs) {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    BiocManager::install(pkg, lib = user_lib, ask = FALSE)
+  }
+}
+
+# Load Biostrings (this will also load its dependencies)
 library(Biostrings)
-# Define the function
+
+#########################################
+# 3. Define the DNA-to-Protein Function
+#########################################
 dna1 <- function(DNAstring) {
-  # Create the DNA sequence object
+  # Create a DNAString object from the input string.
   dna_seq <- DNAString(DNAstring)
-  # Translate the DNA sequence into protein
-  protein <- Biostrings::translate(dna_seq,genetic.code=GENETIC_CODE, if.fuzzy.codon="error")
-  # Return the protein sequence
+  
+  # Translate the DNA sequence into a protein sequence.
+  protein <- translate(dna_seq, if.fuzzy.codon = "error")
+  
+  # Return the resulting protein sequence.
   return(protein)
 }
-# Call the function
-dna1("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG"
-     
+
+#########################################
+# 4. Run the Function and Display Output
+#########################################
+protein_sequence <- dna1("ATGGCCATTGTAATGGGCCGCTGAAAGGGTGCCCGATAG")
+print(protein_sequence)
+
+
+
+
 ## Assignment 2
 # -------------------------------------------------
 # Logistic Growth + Death Phase Simulation in R
@@ -135,7 +176,7 @@ ggplot(df_growth, aes(x = time, y = value, group = factor(curve_id))) +
   # Approach B: "Zoom out" by extending x-axis to 30
   scale_x_continuous(limits = c(0, 25)) +
   theme_minimal()
-     
+
 ##Assignment 3
 # Function to determine the time at which population reaches 80% of carrying capacity
 find_time_to_80_percent_K <- function(time, values, K) {
@@ -152,7 +193,7 @@ time_points <- seq(0, 24, length.out = 50)
 y_values <- simulate_growth_curve_with_death(time_points, K = 1.0, base_rate = 1.0, lag_shift = 0.0, rate_multiplier = 1.0, t_death = 15.0, r_death = 0.1)
 time_to_80_percent <- find_time_to_80_percent_K(time_points, y_values, K = 1.0)
 print(paste("Time to reach 80% of K:", time_to_80_percent))
-     
+
 
 # Assigment 4 
 # Install and load the stringdist package

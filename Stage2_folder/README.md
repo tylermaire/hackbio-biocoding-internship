@@ -92,3 +92,20 @@ To run the complete analysis:
 Open maincode.r in your R environment.
 Execute the script. The code will process the data, generate visualizations, and perform statistical analyses for all four sections.
 Review the output plots and console messages for insights from each analytical section.
+
+
+**Team and Contribuitions**
+Team & Contributions
+This project was developed by Team Theronine:
+
+mahpara97
+Terryida
+imontepez
+tylermaire
+Graciousisoah
+
+**Acknowlegdgments**
+We thank the HackBio community and organizers for the opportunity to tackle these diverse datasets and challenges, and for providing high-quality datasets that facilitated our analysis.
+
+**License**
+This project is licensed under the MIT License.
